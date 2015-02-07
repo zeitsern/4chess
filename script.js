@@ -13,7 +13,7 @@ $(document).ready(function() {
 		$('#box' + i).css( "height", "40px");
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
 		{
-			$('#box' + i).css("backgroundColor", "green");
+			$('#box' + i).css("backgroundColor", "black");
 		}
 		loc[i%14][i/14] = i%14 + "," + parseInt(i/14);
 		piece[i%14][i/14] = "0";
@@ -36,8 +36,11 @@ $(document).ready(function() {
 	[0, 0, 0, 2, 3, 4, 5, 6, 4, 3, 2, 0, 0, 0]
 	];
 	
-	alert(piece[0][0]);
-	alert(piece[0][4]);
+	for(i=0; i<196; i++)
+	{
+		$("#box" + i).click(createCallback(i));
+	}
+	
 	for(i=0; i<196; i=i+14) {
 		$('#box' + i).css( "border-left", "1px solid black");
 	}
@@ -48,3 +51,9 @@ $(document).ready(function() {
 		$('#box' + i).html(i + "=" + piece[i%14][parseInt(i/14)] + "<br />" + loc[i%14][i/14]);
 	}
 });
+
+function createCallback( i ){
+  return function(){
+    $("#box" + i).css("backgroundColor", "yellow");
+  }
+}
