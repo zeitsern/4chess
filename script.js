@@ -2,7 +2,7 @@ var loc = new Array(14);
 var piece = new Array(14);
 for(i=0; i<14; i++)
 {
-	loc[i] = new Array(14);	
+	loc[i] = new Array(14);
 	piece[i] = new Array(14);
 }
 
@@ -14,6 +14,7 @@ $(document).ready(function() {
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
 		{
 			$('#box' + i).css("backgroundColor", "black");
+			$('#box' + i).html(".");
 		}
 		loc[i%14][i/14] = i%14 + "," + parseInt(i/14);
 		piece[i%14][i/14] = "0";
@@ -49,6 +50,11 @@ $(document).ready(function() {
 	}
 	for(i = 0; i < 196; i++) {
 		$('#box' + i).html(i + "=" + piece[i%14][parseInt(i/14)] + "<br />" + loc[i%14][i/14]);
+		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
+		{
+			$('#box' + i).css("backgroundColor", "black");
+			$('#box' + i).html(".");
+		}
 	}
 });
 
