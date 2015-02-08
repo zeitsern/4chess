@@ -22,7 +22,7 @@ $(document).ready(function() {
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
 		{
 			$('#box' + i).css("backgroundColor", "black");
-			$('#box' + i).html(".");
+			$('#box' + i).html("<br \>");
 		}
 		$('#box' + i).html(i + "<br />" + piece[i]);
 	}
@@ -63,7 +63,7 @@ function boxSelected( i ){
 		$('#box' + oldi).html(oldi + "<br />0"); //Reset original piece
 		$('#box' + i).html(i + "<br />" + currentPiece);
 		$("#box" + oldi).css("backgroundColor", "initial");
-		undoLights( oldi, currentPiece);
+		undoLights();
 		selecting = 0;
 		turn ++;
 	
@@ -73,12 +73,134 @@ function boxSelected( i ){
 }
 
 function lightPossibles( i ){
+	var c = 0;
 	if( piece[i] == 1)
 	{
 		$("#box" + (i-14)).css("backgroundColor", "yellow");
 		lights[0] = i-14;
-		$("#box" + (i-28)).css("backgroundColor", "yellow");
-		lights[1] = i-28;
+		if(i>170 && i<179)
+		{
+			$("#box" + (i-28)).css("backgroundColor", "yellow");
+			lights[1] = i-28;
+		}
+	}
+	if( piece[i] == 2)
+	{
+		for(c=1;c<14;c++)
+		{
+			if( piece[i+c] == 0 )
+			{
+				$("#box" + (i+c)).css("backgroundColor", "yellow");
+				lights.push(i+c);
+			}
+			else
+			{
+				$("#box" + (i+c)).css("backgroundColor", "yellow");
+				lights.push(i+c);
+				break;
+			}
+		}
+		for(c=1;c<14;c++)
+		{
+			if( piece[i-c] == 0 )
+			{
+				$("#box" + (i-c)).css("backgroundColor", "yellow");
+				lights.push(i-c);
+			}
+			else
+			{
+				$("#box" + (i-c)).css("backgroundColor", "yellow");
+				lights.push(i-c);
+				break;
+			}
+		}
+		for(c=1;c<14;c++)
+		{
+			if( piece[i+(14*c)] == 0 )
+			{
+				$("#box" + (i+(14*c))).css("backgroundColor", "yellow");
+				lights.push(i+(14*c));
+			}
+			else
+			{
+				$("#box" + (i+(14*c))).css("backgroundColor", "yellow");
+				lights.push(i+(14*c));
+				break;
+			}
+		}
+		for(c=1;c<14;c++)
+		{
+			if( piece[i-(14*c)] == 0 )
+			{
+				$("#box" + (i-(14*c))).css("backgroundColor", "yellow");
+				lights.push(i-(14*c));
+			}
+			else
+			{
+				$("#box" + (i-(14*c))).css("backgroundColor", "yellow");
+				lights.push(i-(14*c));
+				break;
+			}
+		}
+	}
+	if( piece[i] == 3)
+	{
+		for(c=1;c<14;c++)
+		{
+			if( piece[i+(14*c)+c] == 0 )
+			{
+				$("#box" + (i+(14*c)+c)).css("backgroundColor", "yellow");
+				lights.push(i+(14*c)+c);
+			}
+			else
+			{
+				$("#box" + (i+(14*c)+c)).css("backgroundColor", "yellow");
+				lights.push(i+(14*c)+c);
+				break;
+			}
+		}
+		for(c=1;c<14;c++)
+		{
+			if( piece[i+(14*c)-c] == 0 )
+			{
+				$("#box" + (i+(14*c)-c)).css("backgroundColor", "yellow");
+				lights.push(i+(14*c)-c);
+			}
+			else
+			{
+				$("#box" + (i+(14*c)-c)).css("backgroundColor", "yellow");
+				lights.push(i+(14*c)-c);
+				break;
+			}
+		}
+		for(c=1;c<14;c++)
+		{
+			if( piece[i-(14*c)+c] == 0 )
+			{
+				$("#box" + (i-(14*c)+c)).css("backgroundColor", "yellow");
+				lights.push(i-(14*c)+c);
+			}
+			else
+			{
+				$("#box" + (i-(14*c)+c)).css("backgroundColor", "yellow");
+				lights.push(i-(14*c)+c);
+				break;
+			}
+		}
+		for(c=1;c<14;c++)
+		{
+			if( piece[i-(14*c)-c] == 0 )
+			{
+				$("#box" + (i-(14*c)-c)).css("backgroundColor", "yellow");
+				lights.push(i-(14*c)-c);
+			}
+			else
+			{
+				$("#box" + (i-(14*c)-c)).css("backgroundColor", "yellow");
+				lights.push(i-(14*c)-c);
+				break;
+			}
+		}
 	}
 }
 
