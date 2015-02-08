@@ -16,15 +16,25 @@ $(document).ready(function() {
 	piece = [0, 0, 0, 2, 3, 4, 6, 5, 4, 3, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 5, 6, 4, 3, 2, 0, 0, 0];
 
 	for(i = 0; i < 196; i++) {
-		$('#container').append('<div id="box"><div id="box' + i + '">' + i + '</div></div>');
-		$('#box' + i).css( "width", "40px");
-		$('#box' + i).css( "height", "40px");
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
 		{
+			$('#container').append('<div id="box"><div id="blackbox' + i + '">' + i + '</div></div>');
+			$('#blackbox' + i).css( "width", "40px");
+			$('#blackbox' + i).css( "height", "40px");
+			$('#blackbox' + i).css("backgroundColor", "black");
+		}
+		else
+		{
+		$('#container').append('<div id="box"><div id="box' + i + '">' + i + '</div></div>');
+		}
+		$('#box' + i).css( "width", "40px");
+		$('#box' + i).css( "height", "40px");
+		/*{ //This was the old method to add the black boxes
 			$('#box' + i).css("backgroundColor", "black");
 			$('#box' + i).html("<br \>");
-		}
+		}*/
 		$('#box' + i).html(i + "<br />" + piece[i]);
+		$('#blackbox' + i).html(i + "<br />0");
 	}
 	for(i=0; i<196; i++)
 	{
@@ -33,16 +43,11 @@ $(document).ready(function() {
 	
 	for(i=0; i<196; i=i+14) {
 		$('#box' + i).css( "border-left", "1px solid black");
+		$('#blackbox' + i).css( "border-left", "1px solid black");
 	}
 	for(i=0; i<14; i++) {
 		$('#box' + i).css( "border-top", "1px solid black");
-	}
-	for(i = 0; i < 196; i++) {
-		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
-		{
-			$('#box' + i).css("backgroundColor", "black");
-			$('#box' + i).html(".");
-		}
+		$('#blackbox' + i).css( "border-top", "1px solid black");
 	}
 });
 
@@ -88,6 +93,8 @@ function lightPossibles( i ){
 	{
 		for(c=1;c<14;c++)
 		{
+			if((i+c-1)%14==0 && (i+c)%14==1) {break;}
+			if((i+c-1)%14==1 && (i+c)%14==0) {break;}
 			if( piece[i+c] == 0 )
 			{
 				$("#box" + (i+c)).css("backgroundColor", "yellow");
