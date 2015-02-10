@@ -6,10 +6,24 @@ var selecting = 0;
 var currentPiece = 0;
 var currentOwner = 0;
 var oldi = 0;
+var pos = [0, 0];
+
 for(i=0; i<14; i++)
 {
 	piece[i] = new Array(14);
 }
+
+var socket = io.connect('http://localhost:3000/');
+
+socket.on('new message', function(msg) {
+	pos = msg.text.split(',');
+	piece[pos[1]] = piece[pos[0]];
+	owner[pos[1]] = owner[pos[0]];
+	piece[pos[0]] = 0;
+	owner[pos[0]] = 0;
+	$('#box' + pos[0]).html("");
+	$('#box' + pos[1]).html("<img src='images/" + owner[pos[1]] + piece[pos[1]] + ".png'></img>");
+});
 
 $(document).ready(function() {
 	var turn = 0; //4 players: 0,1,2,3
@@ -67,7 +81,7 @@ function boxSelected( i ){
 		selecting = 1;
 		lightPossibles( i );
 	}
-	else if(turn < 4 && selecting == 1)
+	else if(turn < 4 && selecting == 1 && ($('#box' + i).css("backgroundColor") == "rgb(255, 255, 0)" || $('#box' + i).css("backgroundColor") == "rgb(255, 165, 0)"))
 	{
 		piece[oldi] = 0;
 		owner[oldi] = 0;
@@ -95,7 +109,7 @@ function lightPossibles( i ){
 			lights[1] = i-28;
 		}
 	}
-	if( piece[i] == 2)
+	if( piece[i] == 2 || piece[i] == 5)
 	{
 		for(c=1;c<14;c++)
 		{
@@ -158,11 +172,11 @@ function lightPossibles( i ){
 			}
 		}
 	}
-	if( piece[i] == 4)
+	if( piece[i] == 4 || piece[i] == 5)
 	{
 		for(c=1;c<14;c++)
 		{
-			if( (i+(14*c)+c)%14 == 0 ){break;}
+			if( (i+(14*c)+c)%14 == 0 || owner[(i+(14*c)+c)] == 1){break;}
 			if( piece[i+(14*c)+c] == 0 )
 			{
 				$("#box" + (i+(14*c)+c)).css("backgroundColor", "yellow");
@@ -177,7 +191,7 @@ function lightPossibles( i ){
 		}
 		for(c=1;c<14;c++)
 		{
-			if( ((i+(14*c)-c))%14 == 13 ){break;}
+			if( ((i+(14*c)-c))%14 == 13 || owner[(i+(14*c)-c)] == 1){break;}
 			if( piece[i+(14*c)-c] == 0 )
 			{
 				$("#box" + (i+(14*c)-c)).css("backgroundColor", "yellow");
@@ -192,7 +206,7 @@ function lightPossibles( i ){
 		}
 		for(c=1;c<14;c++)
 		{
-			if( (i-(14*c)+c)%14 == 0 ){break;}
+			if( (i-(14*c)+c)%14 == 0 || owner[(i-(14*c)+c)] == 1){break;}
 			if( piece[i-(14*c)+c] == 0 )
 			{
 				$("#box" + (i-(14*c)+c)).css("backgroundColor", "yellow");
@@ -207,7 +221,7 @@ function lightPossibles( i ){
 		}
 		for(c=1;c<14;c++)
 		{
-			if( (i-(14*c)-c)%14 == 13 ){break;}
+			if( (i-(14*c)-c)%14 == 13 || owner[(i-(14*c)-c)] == 1){break;}
 			if( piece[i-(14*c)-c] == 0 )
 			{
 				$("#box" + (i-(14*c)-c)).css("backgroundColor", "yellow");
@@ -223,14 +237,25 @@ function lightPossibles( i ){
 	}
 	if( piece[i] == 3)
 	{
-		$("#box" + (i-29)).css("backgroundColor", "yellow"); lights.push(i-29);
-		$("#box" + (i-27)).css("backgroundColor", "yellow"); lights.push(i-27);
-		$("#box" + (i-16)).css("backgroundColor", "yellow"); lights.push(i-16);
-		$("#box" + (i-12)).css("backgroundColor", "yellow"); lights.push(i-12);
-		$("#box" + (i+12)).css("backgroundColor", "yellow"); lights.push(i+12);
-		$("#box" + (i+16)).css("backgroundColor", "yellow"); lights.push(i+16);
-		$("#box" + (i+27)).css("backgroundColor", "yellow"); lights.push(i+27);
-		$("#box" + (i+29)).css("backgroundColor", "yellow"); lights.push(i+29);
+		if(owner[i-29] != 1){$("#box" + (i-29)).css("backgroundColor", "yellow"); lights.push(i-29);}
+		if(owner[i-27] != 1){$("#box" + (i-27)).css("backgroundColor", "yellow"); lights.push(i-27);}
+		if(owner[i-16] != 1){$("#box" + (i-16)).css("backgroundColor", "yellow"); lights.push(i-16);}
+		if(owner[i-12] != 1){$("#box" + (i-12)).css("backgroundColor", "yellow"); lights.push(i-12);}
+		if(owner[i+12] != 1){$("#box" + (i+12)).css("backgroundColor", "yellow"); lights.push(i+12);}
+		if(owner[i+16] != 1){$("#box" + (i+16)).css("backgroundColor", "yellow"); lights.push(i+16);}
+		if(owner[i+27] != 1){$("#box" + (i+27)).css("backgroundColor", "yellow"); lights.push(i+27);}
+		if(owner[i+29] != 1){$("#box" + (i+29)).css("backgroundColor", "yellow"); lights.push(i+29);}
+	}
+	if( piece[i] == 6)
+	{
+		if(owner[i-1] != 1){$("#box" + (i-1)).css("backgroundColor", "yellow"); lights.push(i-1);}
+		if(owner[i+1] != 1){$("#box" + (i+1)).css("backgroundColor", "yellow"); lights.push(i+1);}
+		if(owner[i-15] != 1){$("#box" + (i-15)).css("backgroundColor", "yellow"); lights.push(i-15);}
+		if(owner[i-14] != 1){$("#box" + (i-14)).css("backgroundColor", "yellow"); lights.push(i-14);}
+		if(owner[i-13] != 1){$("#box" + (i-13)).css("backgroundColor", "yellow"); lights.push(i-13);}
+		if(owner[i+13] != 1){$("#box" + (i+13)).css("backgroundColor", "yellow"); lights.push(i+13);}
+		if(owner[i+14] != 1){$("#box" + (i+14)).css("backgroundColor", "yellow"); lights.push(i+14);}
+		if(owner[i+15] != 1){$("#box" + (i+15)).css("backgroundColor", "yellow"); lights.push(i+15);}
 	}
 }
 
