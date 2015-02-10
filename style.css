@@ -13,3 +13,7 @@
 	border-collapse: collapse;
 	vertical-align: top;
 }
+
+input {
+	float: left;
+}
