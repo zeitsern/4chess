@@ -7,6 +7,7 @@ var currentPiece = 0;
 var currentOwner = 0;
 var oldi = 0;
 var pos = [0, 0];
+var text = 0;
 
 for(i=0; i<14; i++)
 {
@@ -17,12 +18,33 @@ var socket = io.connect('http://localhost:3000/');
 
 socket.on('new message', function(msg) {
 	pos = msg.text.split(',');
-	piece[pos[1]] = piece[pos[0]];
-	owner[pos[1]] = owner[pos[0]];
-	piece[pos[0]] = 0;
-	owner[pos[0]] = 0;
-	$('#box' + pos[0]).html("");
-	$('#box' + pos[1]).html("<img src='images/" + owner[pos[1]] + piece[pos[1]] + ".png'></img>");
+	$('body').append(msg.text);
+	if(pos[0] == $('input').val())
+	{
+		oldi = 0;
+		i = 0;
+	}
+	else if(pos[0] == 2)
+	{
+		oldi = (14*pos[1])+(13-pos[2]);
+		i = (14*pos[3])+(13-pos[4]);
+	}
+	else if(pos[0] == 3)
+	{
+		oldi = (14*(13-pos[2]))+(13-pos[1]);
+		i = (14*(13-pos[4]))+(13-pos[3]);
+	}
+	else if(pos[0] == 4)
+	{
+		oldi = (14*(13-pos[1]))+pos[2];
+		i = (14*(13-pos[3]))+pos[4];
+	}
+	piece[i] = piece[oldi];
+	owner[i] = owner[oldi];
+	piece[oldi] = 0;
+	owner[oldi] = 0;
+	$('#box' + oldi).html("");
+	$('#box' + i).html("<img src='images/" + owner[i] + piece[i] + ".png'></img>");
 });
 
 $(document).ready(function() {
@@ -91,6 +113,9 @@ function boxSelected( i ){
 		$('#box' + i).html("<img src='images/" + owner[i] + piece[i] + ".png'></img>");
 		$("#box" + oldi).css("backgroundColor", "initial");
 		undoLights();
+		text = $('input').val() + "," + (oldi%14) + "," + parseInt(oldi/14) + "," + (i%14) + "," + parseInt(i/14);
+		$('body').append(text + "\n");
+		socket.emit('new message', { text: text });
 		selecting = 0;
 	if(turn > 3){turn=0;}
 	}
