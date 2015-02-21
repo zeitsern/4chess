@@ -24,20 +24,20 @@ socket.on('new message', function(msg) {
 		oldi = 0;
 		i = 0;
 	}
-	else if(pos[0] == 2)
+	else if(pos[0] == parseInt($('input').val())+1 || pos[0] == (parseInt($('input').val())-3))
 	{
-		oldi = (14*pos[1])+(13-pos[2]);
-		i = (14*pos[3])+(13-pos[4]);
+		oldi = parseInt(14*pos[1])+parseInt(13-pos[2]);
+		i = parseInt(14*pos[3])+parseInt(13-pos[4]);
 	}
-	else if(pos[0] == 3)
+	else if(pos[0] == parseInt($('input').val())+2 || pos[0] == (parseInt($('input').val())-2))
 	{
-		oldi = (14*(13-pos[2]))+(13-pos[1]);
-		i = (14*(13-pos[4]))+(13-pos[3]);
+		oldi = (14*(13-pos[2]))+parseInt(13-pos[1]);
+		i = (14*(13-pos[4]))+parseInt(13-pos[3]);
 	}
-	else if(pos[0] == 4)
+	else if(pos[0] == parseInt($('input').val())+3 || pos[0] == (parseInt($('input').val())-1))
 	{
-		oldi = (14*(13-pos[1]))+pos[2];
-		i = (14*(13-pos[3]))+pos[4];
+		oldi = parseInt(14*(13-pos[1]))+parseInt(pos[2]);
+		i = parseInt(14*(13-pos[3]))+parseInt(pos[4]);
 	}
 	piece[i] = piece[oldi];
 	owner[i] = owner[oldi];
