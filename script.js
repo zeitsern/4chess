@@ -8,6 +8,7 @@ var currentOwner = 0;
 var oldi = 0;
 var pos = [0, 0];
 var text = 0;
+var player = -1;
 
 for(i=0; i<14; i++)
 {
@@ -19,22 +20,22 @@ var socket = io.connect('http://localhost:3000/');
 socket.on('new message', function(msg) {
 	pos = msg.text.split(',');
 	$('body').append(msg.text);
-	if(pos[0] == $('input').val())
+	if(pos[0] == $('#password').val())
 	{
 		oldi = 0;
 		i = 0;
 	}
-	else if(pos[0] == parseInt($('input').val())+1 || pos[0] == (parseInt($('input').val())-3))
+	else if(pos[0] == parseInt($('#password').val())+1 || pos[0] == (parseInt($('#password').val())-3))
 	{
 		oldi = parseInt(14*pos[1])+parseInt(13-pos[2]);
 		i = parseInt(14*pos[3])+parseInt(13-pos[4]);
 	}
-	else if(pos[0] == parseInt($('input').val())+2 || pos[0] == (parseInt($('input').val())-2))
+	else if(pos[0] == parseInt($('#password').val())+2 || pos[0] == (parseInt($('#password').val())-2))
 	{
 		oldi = (14*(13-pos[2]))+parseInt(13-pos[1]);
 		i = (14*(13-pos[4]))+parseInt(13-pos[3]);
 	}
-	else if(pos[0] == parseInt($('input').val())+3 || pos[0] == (parseInt($('input').val())-1))
+	else if(pos[0] == parseInt($('#password').val())+3 || pos[0] == (parseInt($('#password').val())-1))
 	{
 		oldi = parseInt(14*(13-pos[1]))+parseInt(pos[2]);
 		i = parseInt(14*(13-pos[3]))+parseInt(pos[4]);
@@ -57,7 +58,7 @@ $(document).ready(function() {
 	for(i = 0; i < 196; i++) {
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
 		{
-			$('#container').append('<div id="box"><div id="blackbox' + i + '">' + i + '</div></div>');
+			$('#container').append('<div id="box"><div id="blackbox' + i + '"></div></div>');
 			$('#blackbox' + i).css( "width", "45px");
 			$('#blackbox' + i).css( "height", "45px");
 			$('#blackbox' + i).css("backgroundColor", "black");
@@ -68,14 +69,10 @@ $(document).ready(function() {
 		}
 		$('#box' + i).css( "width", "45px");
 		$('#box' + i).css( "height", "45px");
-		/*{ //This was the old method to add the black boxes
-			$('#box' + i).css("backgroundColor", "black");
-			$('#box' + i).html("<br \>");
-		}*/
 		$('#box' + i).html(i + "<br />" + piece[i] + "," + owner[i]);
 		if(piece[i] > 0){$('#box' + i).html("<img src='images/" + owner[i] + piece[i] + ".png'></img>");}
 		else{$('#box' + i).html("");}
-		$('#blackbox' + i).html(i + "<br />0");
+		//$('#blackbox' + i).html(i + "<br />0"); //Fill black boxes with box number and piece value.
 	}
 	for(i=0; i<196; i++)
 	{
@@ -113,7 +110,7 @@ function boxSelected( i ){
 		$('#box' + i).html("<img src='images/" + owner[i] + piece[i] + ".png'></img>");
 		$("#box" + oldi).css("backgroundColor", "initial");
 		undoLights();
-		text = $('input').val() + "," + (oldi%14) + "," + parseInt(oldi/14) + "," + (i%14) + "," + parseInt(i/14);
+		text = $('#password').val() + "," + (oldi%14) + "," + parseInt(oldi/14) + "," + (i%14) + "," + parseInt(i/14);
 		$('body').append(text + "\n");
 		socket.emit('new message', { text: text });
 		selecting = 0;

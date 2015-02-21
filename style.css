@@ -1,4 +1,5 @@
 #container {
+	position: relative;
 	width: 645px;
 	margin-left: auto;
 	margin-right: auto;
@@ -12,6 +13,20 @@
 	display: inline-table;
 	border-collapse: collapse;
 	vertical-align: top;
+}
+
+#player{
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: white;
+}
+
+#turn{
+	position: absolute;
+	top: 20px;
+	left: 0;
+	color: white;
 }
 
 input {
