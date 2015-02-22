@@ -25,22 +25,22 @@ socket.on('player', function(msg) {
 socket.on('new message', function(msg) {
 	pos = msg.text.split(',');
 	$('body').append(msg.text);
-	if(pos[0] == $('#password').val())
+	if(pos[0] == player)
 	{
 		oldi = 0;
 		i = 0;
 	}
-	else if(pos[0] == parseInt($('#password').val())+1 || pos[0] == (parseInt($('#password').val())-3))
+	else if(pos[0] == parseInt(player)+1 || pos[0] == (parseInt(player)-3))
 	{
 		oldi = parseInt(14*pos[1])+parseInt(13-pos[2]);
 		i = parseInt(14*pos[3])+parseInt(13-pos[4]);
 	}
-	else if(pos[0] == parseInt($('#password').val())+2 || pos[0] == (parseInt($('#password').val())-2))
+	else if(pos[0] == parseInt(player)+2 || pos[0] == (parseInt(player)-2))
 	{
 		oldi = (14*(13-pos[2]))+parseInt(13-pos[1]);
 		i = (14*(13-pos[4]))+parseInt(13-pos[3]);
 	}
-	else if(pos[0] == parseInt($('#password').val())+3 || pos[0] == (parseInt($('#password').val())-1))
+	else if(pos[0] == parseInt(player)+3 || pos[0] == (parseInt(player)-1))
 	{
 		oldi = parseInt(14*(13-pos[1]))+parseInt(pos[2]);
 		i = parseInt(14*(13-pos[3]))+parseInt(pos[4]);
@@ -61,7 +61,7 @@ $(document).ready(function() {
 	owner = [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
 	
 	$( "#submit" ).click(function() {
-		socket.emit('password', $('#password').val());
+		socket.emit('password', player);
 	});
 	for(i = 0; i < 196; i++) {
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
@@ -101,7 +101,7 @@ $(document).ready(function() {
 
 function boxSelected( i ){
   return function(){
-	if(turn == 1 && selecting == 0 && piece[i] != 0 && owner[i] == 1) //playing as player 1
+	if(turn == 1 && selecting == 0 && piece[i] != 0 && owner[i] == 1 && player != -1) //playing as player 1
 	{
 		$("#box" + i).css("backgroundColor", "orange");
 		currentPiece = piece[i];
