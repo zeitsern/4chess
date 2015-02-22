@@ -17,6 +17,11 @@ for(i=0; i<14; i++)
 
 var socket = io.connect('http://localhost:3000/');
 
+socket.on('player', function(msg) {
+	player = msg;
+	$("#player").html("Player: " + player);
+});
+
 socket.on('new message', function(msg) {
 	pos = msg.text.split(',');
 	$('body').append(msg.text);
@@ -55,6 +60,9 @@ $(document).ready(function() {
 	piece = [0, 0, 0, 2, 3, 4, 6, 5, 4, 3, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 5, 6, 4, 3, 2, 0, 0, 0];
 	owner = [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
 	
+	$( "#submit" ).click(function() {
+		socket.emit('password', $('#password').val());
+	});
 	for(i = 0; i < 196; i++) {
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
 		{
@@ -89,6 +97,8 @@ $(document).ready(function() {
 	}
 });
 
+
+
 function boxSelected( i ){
   return function(){
 	if(turn == 1 && selecting == 0 && piece[i] != 0 && owner[i] == 1) //playing as player 1
@@ -110,7 +120,7 @@ function boxSelected( i ){
 		$('#box' + i).html("<img src='images/" + owner[i] + piece[i] + ".png'></img>");
 		$("#box" + oldi).css("backgroundColor", "initial");
 		undoLights();
-		text = $('#password').val() + "," + (oldi%14) + "," + parseInt(oldi/14) + "," + (i%14) + "," + parseInt(i/14);
+		text = player + "," + (oldi%14) + "," + parseInt(oldi/14) + "," + (i%14) + "," + parseInt(i/14);
 		$('body').append(text + "\n");
 		socket.emit('new message', { text: text });
 		selecting = 0;
