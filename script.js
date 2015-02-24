@@ -1,7 +1,7 @@
 var piece = new Array(196);
 var owner = new Array(196);
 var lights = new Array(190);
-var turn = 1; //4 players: 1,2,3,4
+var turn = 0; //4 players: 1,2,3,4
 var selecting = 0;
 var currentPiece = 0;
 var currentOwner = 0;
@@ -9,17 +9,22 @@ var oldi = 0;
 var pos = [0, 0];
 var text = 0;
 var player = -1;
-
-for(i=0; i<14; i++)
-{
-	piece[i] = new Array(14);
-}
+var getplayer = 0;
 
 var socket = io.connect('http://localhost:3000/');
 
 socket.on('player', function(msg) {
-	player = msg;
-	$("#player").html("Player: " + player);
+	if(getplayer == 1)
+	{
+		player = msg;
+		$("#player").html("Player: " + player);
+		getplayer = 0;
+	}
+});
+
+socket.on('turn', function(msg) {
+	turn = msg;
+	$("#turn").html("Turn: " + turn);
 });
 
 socket.on('new message', function(msg) {
@@ -54,14 +59,14 @@ socket.on('new message', function(msg) {
 });
 
 $(document).ready(function() {
-	var turn = 0; //4 players: 0,1,2,3
 	var selecting = 0;
 	var currentPiece = 0;
 	piece = [0, 0, 0, 2, 3, 4, 6, 5, 4, 3, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 5, 6, 4, 3, 2, 0, 0, 0];
 	owner = [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
 	
 	$( "#submit" ).click(function() {
-		socket.emit('password', player);
+		socket.emit('password', $("#password").val());
+		getplayer = 1;
 	});
 	for(i = 0; i < 196; i++) {
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
@@ -101,7 +106,7 @@ $(document).ready(function() {
 
 function boxSelected( i ){
   return function(){
-	if(turn == 1 && selecting == 0 && piece[i] != 0 && owner[i] == 1 && player != -1) //playing as player 1
+	if(turn == player && selecting == 0 && piece[i] != 0 && owner[i] == 1) //playing as player 1
 	{
 		$("#box" + i).css("backgroundColor", "orange");
 		currentPiece = piece[i];
@@ -110,7 +115,7 @@ function boxSelected( i ){
 		selecting = 1;
 		lightPossibles( i );
 	}
-	else if(turn < 4 && selecting == 1 && ($('#box' + i).css("backgroundColor") == "rgb(255, 255, 0)" || $('#box' + i).css("backgroundColor") == "rgb(255, 165, 0)"))
+	else if(selecting == 1 && ($('#box' + i).css("backgroundColor") == "rgb(255, 255, 0)" || $('#box' + i).css("backgroundColor") == "rgb(255, 165, 0)"))
 	{
 		piece[oldi] = 0;
 		owner[oldi] = 0;
@@ -269,25 +274,25 @@ function lightPossibles( i ){
 	}
 	if( piece[i] == 3)
 	{
-		if(owner[i-29] != 1){$("#box" + (i-29)).css("backgroundColor", "yellow"); lights.push(i-29);}
-		if(owner[i-27] != 1){$("#box" + (i-27)).css("backgroundColor", "yellow"); lights.push(i-27);}
-		if(owner[i-16] != 1){$("#box" + (i-16)).css("backgroundColor", "yellow"); lights.push(i-16);}
-		if(owner[i-12] != 1){$("#box" + (i-12)).css("backgroundColor", "yellow"); lights.push(i-12);}
-		if(owner[i+12] != 1){$("#box" + (i+12)).css("backgroundColor", "yellow"); lights.push(i+12);}
-		if(owner[i+16] != 1){$("#box" + (i+16)).css("backgroundColor", "yellow"); lights.push(i+16);}
-		if(owner[i+27] != 1){$("#box" + (i+27)).css("backgroundColor", "yellow"); lights.push(i+27);}
-		if(owner[i+29] != 1){$("#box" + (i+29)).css("backgroundColor", "yellow"); lights.push(i+29);}
+		if(owner[i-29] != 1 && i%14 > 0){$("#box" + (i-29)).css("backgroundColor", "yellow"); lights.push(i-29);}
+		if(owner[i-27] != 1 && i%14 < 13){$("#box" + (i-27)).css("backgroundColor", "yellow"); lights.push(i-27);}
+		if(owner[i-16] != 1 && i%14 > 1){$("#box" + (i-16)).css("backgroundColor", "yellow"); lights.push(i-16);}
+		if(owner[i-12] != 1 && i%14 < 12){$("#box" + (i-12)).css("backgroundColor", "yellow"); lights.push(i-12);}
+		if(owner[i+12] != 1 && i%14 > 1){$("#box" + (i+12)).css("backgroundColor", "yellow"); lights.push(i+12);}
+		if(owner[i+16] != 1 && i%14 < 12){$("#box" + (i+16)).css("backgroundColor", "yellow"); lights.push(i+16);}
+		if(owner[i+27] != 1 && i%14 > 0){$("#box" + (i+27)).css("backgroundColor", "yellow"); lights.push(i+27);}
+		if(owner[i+29] != 1 && i%14 < 13){$("#box" + (i+29)).css("backgroundColor", "yellow"); lights.push(i+29);}
 	}
 	if( piece[i] == 6)
 	{
-		if(owner[i-1] != 1){$("#box" + (i-1)).css("backgroundColor", "yellow"); lights.push(i-1);}
-		if(owner[i+1] != 1){$("#box" + (i+1)).css("backgroundColor", "yellow"); lights.push(i+1);}
-		if(owner[i-15] != 1){$("#box" + (i-15)).css("backgroundColor", "yellow"); lights.push(i-15);}
+		if(owner[i-1] != 1 && i%14 > 0){$("#box" + (i-1)).css("backgroundColor", "yellow"); lights.push(i-1);}
+		if(owner[i+1] != 1 && i%14 < 13){$("#box" + (i+1)).css("backgroundColor", "yellow"); lights.push(i+1);}
+		if(owner[i-15] != 1 && i%14 > 0){$("#box" + (i-15)).css("backgroundColor", "yellow"); lights.push(i-15);}
 		if(owner[i-14] != 1){$("#box" + (i-14)).css("backgroundColor", "yellow"); lights.push(i-14);}
-		if(owner[i-13] != 1){$("#box" + (i-13)).css("backgroundColor", "yellow"); lights.push(i-13);}
-		if(owner[i+13] != 1){$("#box" + (i+13)).css("backgroundColor", "yellow"); lights.push(i+13);}
+		if(owner[i-13] != 1 && i%14 < 13){$("#box" + (i-13)).css("backgroundColor", "yellow"); lights.push(i-13);}
+		if(owner[i+13] != 1 && i%14 > 0){$("#box" + (i+13)).css("backgroundColor", "yellow"); lights.push(i+13);}
 		if(owner[i+14] != 1){$("#box" + (i+14)).css("backgroundColor", "yellow"); lights.push(i+14);}
-		if(owner[i+15] != 1){$("#box" + (i+15)).css("backgroundColor", "yellow"); lights.push(i+15);}
+		if(owner[i+15] != 1 && i%14 < 13){$("#box" + (i+15)).css("backgroundColor", "yellow"); lights.push(i+15);}
 	}
 }
 
