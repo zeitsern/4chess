@@ -61,7 +61,7 @@ socket.on('new message', function(msg) {
 $(document).ready(function() {
 	var selecting = 0;
 	var currentPiece = 0;
-	piece = [0, 0, 0, 2, 3, 4, 6, 5, 4, 3, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 5, 6, 4, 3, 2, 0, 0, 0];
+	piece = [0, 0, 0, 2, 3, 4, 6, 5, 4, 3, 2, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 3, 4, 5, 6, 4, 3, 2, 0, 0, 0];
 	owner = [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
 	
 	$( "#submit" ).click(function() {
@@ -126,7 +126,7 @@ function boxSelected( i ){
 		$("#box" + oldi).css("backgroundColor", "initial");
 		undoLights();
 		text = player + "," + (oldi%14) + "," + parseInt(oldi/14) + "," + (i%14) + "," + parseInt(i/14);
-		$('body').append(text + "\n");
+		$('body').append(text + "\n\n");
 		socket.emit('new message', { text: text });
 		selecting = 0;
 	if(turn > 3){turn=0;}
@@ -136,17 +136,30 @@ function boxSelected( i ){
 
 function lightPossibles( i ){
 	var c = 0;
-	if( piece[i] == 1)
+	if( piece[i] == 1) //Pawn
 	{
-		$("#box" + (i-14)).css("backgroundColor", "yellow");
-		lights[0] = i-14;
-		if(i>170 && i<179)
+		if( piece[i-14] == 0)
 		{
-			$("#box" + (i-28)).css("backgroundColor", "yellow");
-			lights[1] = i-28;
+			$("#box" + (i-14)).css("backgroundColor", "yellow");
+			lights.push(i-14);
+			if(i>170 && i<179 && piece[i-28] == 0)
+			{
+				$("#box" + (i-28)).css("backgroundColor", "yellow");
+				lights.push(i-28);
+			}
+		}
+		if(piece[i-13] > 0)
+		{
+			$("#box" + (i-13)).css("backgroundColor", "yellow");
+			lights.push(i-13);
+		}
+		if(piece[i-15] > 0)
+		{
+			$("#box" + (i-15)).css("backgroundColor", "yellow");
+			lights.push(i-15);
 		}
 	}
-	if( piece[i] == 2 || piece[i] == 5)
+	if( piece[i] == 2 || piece[i] == 5) //Rook or Queen
 	{
 		for(c=1;c<14;c++)
 		{
@@ -209,7 +222,7 @@ function lightPossibles( i ){
 			}
 		}
 	}
-	if( piece[i] == 4 || piece[i] == 5)
+	if( piece[i] == 4 || piece[i] == 5) //Knight or Queen
 	{
 		for(c=1;c<14;c++)
 		{
@@ -272,7 +285,7 @@ function lightPossibles( i ){
 			}
 		}
 	}
-	if( piece[i] == 3)
+	if( piece[i] == 3) //Bishop
 	{
 		if(owner[i-29] != 1 && i%14 > 0){$("#box" + (i-29)).css("backgroundColor", "yellow"); lights.push(i-29);}
 		if(owner[i-27] != 1 && i%14 < 13){$("#box" + (i-27)).css("backgroundColor", "yellow"); lights.push(i-27);}
@@ -283,7 +296,7 @@ function lightPossibles( i ){
 		if(owner[i+27] != 1 && i%14 > 0){$("#box" + (i+27)).css("backgroundColor", "yellow"); lights.push(i+27);}
 		if(owner[i+29] != 1 && i%14 < 13){$("#box" + (i+29)).css("backgroundColor", "yellow"); lights.push(i+29);}
 	}
-	if( piece[i] == 6)
+	if( piece[i] == 6) //King
 	{
 		if(owner[i-1] != 1 && i%14 > 0){$("#box" + (i-1)).css("backgroundColor", "yellow"); lights.push(i-1);}
 		if(owner[i+1] != 1 && i%14 < 13){$("#box" + (i+1)).css("backgroundColor", "yellow"); lights.push(i+1);}
