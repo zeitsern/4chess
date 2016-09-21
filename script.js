@@ -18,18 +18,23 @@ socket.on('player', function(msg) {
 	{
 		player = msg;
 		$("#player").html("Player: " + player);
-		getplayer = 0;
+		//getplayer = 0;
 	}
 });
 
 socket.on('turn', function(msg) {
 	turn = msg;
 	$("#turn").html("Turn: " + turn);
+	if(turn == 1)
+	{
+		$('#wall').css('display', 'none');
+		$('#findingmatch').css('display', 'none');
+	}
 });
 
 socket.on('new message', function(msg) {
 	pos = msg.text.split(',');
-	$('body').append(msg.text);
+	$('body').append(msg.text + "\n");
 	if(pos[0] == player)
 	{
 		oldi = 0;
@@ -65,9 +70,15 @@ $(document).ready(function() {
 	owner = [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0];
 	
 	$( "#submit" ).click(function() {
-		socket.emit('password', $("#password").val());
-		getplayer = 1;
+		if(getplayer == 0)
+		{
+			getplayer = 1;
+			socket.emit('findmatch', 'findmatch');
+			$('#wall').css('display', 'inline');
+			$('#findingmatch').css('display', 'inline');
+		}
 	});
+	
 	for(i = 0; i < 196; i++) {
 		if(((i%14 < 3 || i%14 > 10) && i < 42) || ((i%14 < 3 || i%14 > 10) && i > 153))
 		{
@@ -148,12 +159,12 @@ function lightPossibles( i ){
 				lights.push(i-28);
 			}
 		}
-		if(piece[i-13] > 0)
+		if(piece[i-13] > 0 && owner[i-13] > 1)
 		{
 			$("#box" + (i-13)).css("backgroundColor", "yellow");
 			lights.push(i-13);
 		}
-		if(piece[i-15] > 0)
+		if(piece[i-15] > 0 && owner[i-15] > 1)
 		{
 			$("#box" + (i-15)).css("backgroundColor", "yellow");
 			lights.push(i-15);

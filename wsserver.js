@@ -7,7 +7,8 @@ var server = http.createServer( app );
 
 var io  = sio.listen(server);
 
-var player = -1;
+var player = 0;
+var playerids = [];
 var login = new Array(4);
 turn = 0;
 
@@ -18,13 +19,26 @@ io.sockets.on('connection', function(socket) {
 	else{turn++;}
 	io.sockets.emit('turn', turn );
   });
-  socket.on('password', function(msg) {
-	if(msg == "one"){player = 1; login[0]=1;}
-	else if(msg == "two"){player = 2; login[1]=1;}
-	else if(msg == "three"){player = 3; login[2]=1;}
-	else if(msg == "four"){player = 4; login[3]=1;}
-	if(login[0] == 1 && turn == 0){turn = 1; io.sockets.emit('turn', turn );}
-    io.sockets.emit( 'player', player );
+  socket.on('findmatch', function(msg) {
+	if(!playerids.includes(socket.id))
+	{
+	console.log("ID: " + socket.id + " Seraching for a match");
+	playerids.push(socket.id);
+	player++;
+	console.log("Player " + player + " connected.")
+	
+	if(player < 5)
+	{
+		io.sockets.emit( 'player', player );
+		login[player-1] = 1;
+	}
+	else
+	{
+		io.sockets.emit( 'player', "max");
+	}
+	}
+	if(login[3] == 1 && turn == 0){turn = 1; io.sockets.emit('turn', turn );}
+    
   });
 });
 

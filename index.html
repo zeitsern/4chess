@@ -4,12 +4,15 @@
 		<meta charset="utf-8" />
 		<title>4chess</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="icon" type="img/ico" href="images/favicon.ico">
 		<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
 		<script src="socket.io.js"></script>
 		<script type="text/javascript" src="script.js"></script>
 	</head>
 	<body>
-	<input type="text" id="password" /><input type="submit" value="Login" id="submit" />
+	<input type="text" id="password" /><input type="submit" value="Find Match" id="submit" />
+	<div id="wall" style="display: none; background: #7b7b7b;position:fixed;top:0;left:0;right:0;bottom:0;opacity:0.85;z-index:9998;"></div>
+	<div style="display: none; border: 1px solid black; width: 500px; height: 200px; top: 350px; left: 50%; margin: -100px 0px 0px -250px; position: absolute; z-index: 9999; background-color: white; line-height: 200px; text-align: center;" id="findingmatch"><img style="vertical-align: -7px" src="images/loading.gif"></img>	finding match</div>
 	<div id="container">
 		<div id="player">Player: </div>
 		<div id="turn">Turn: </div>
